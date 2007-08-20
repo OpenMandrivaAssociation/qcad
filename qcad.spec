@@ -25,7 +25,7 @@ BuildRequires:  png-devel
 BuildRequires:  zlib-devel
 BuildRequires:	qt3-devel
 BuildRequires:	qt3-static-devel
-BuildPreReq:	unzip
+BuildRequires:	unzip
 BuildRoot: 	%{_tmppath}/%{name}-%{version}-root
 
 %description
