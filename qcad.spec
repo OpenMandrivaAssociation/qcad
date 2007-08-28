@@ -109,7 +109,6 @@ Terminal=false
 Type=Application
 Categories=X-MandrivaLinux-Office-Graphs;Office;Chart;
 StartupNotify=true
-Encoding=UTF-8
 EOF
 
 # fix permissions
