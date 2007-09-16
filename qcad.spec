@@ -1,7 +1,7 @@
 %define	name	qcad
 %define	version	2.0.5.0
 %define manver	2.0.4.0-1
-%define	release	3
+%define	release	4
 
 Summary: 	A professional CAD system
 Name: 		%{name}
@@ -82,21 +82,6 @@ cp -rfp qcad-manual-en-%{manver}.html/* $RPM_BUILD_ROOT/%_datadir/qcad/doc
 # icons
 tar xjf %SOURCE1 -C $RPM_BUILD_ROOT%{_iconsdir}
 
-# menu
-install -m 755 -d $RPM_BUILD_ROOT/%_menudir
-cat > $RPM_BUILD_ROOT%_menudir/qcad <<EOF
-?package(qcad):\
-needs="x11"\
-section="Office/Graphs"\
-title="Qcad"\
-command="%{_bindir}/qcad"\
-icon=%{name}.png \
-%if %{mdkversion} >= 200610
-xdg=true \
-%endif
-longtitle="A professional CAD system"
-EOF
-
 # desktop
 install -m 755 -d $RPM_BUILD_ROOT%{_datadir}/applications
 cat > $RPM_BUILD_ROOT%{_datadir}/applications/mandriva-%{name}.desktop <<EOF
@@ -107,7 +92,7 @@ Exec=%{_bindir}/qcad %f
 Icon=qcad
 Terminal=false
 Type=Application
-Categories=X-MandrivaLinux-Office-Graphs;Office;Chart;
+Categories=Office;Chart;
 StartupNotify=true
 EOF
 
@@ -115,7 +100,6 @@ EOF
 find $RPM_BUILD_ROOT%_bindir/ -type d -print0 | xargs -0 chmod 755
 find $RPM_BUILD_ROOT%_libdir/ -type d -print0 | xargs -0 chmod 755
 find $RPM_BUILD_ROOT%_datadir/ -type d -print0 | xargs -0 chmod 755
-find $RPM_BUILD_ROOT%_menudir/ -type f  -print0 | xargs -0 chmod 644
 find $RPM_BUILD_ROOT%_datadir/ -type f  -print0 | xargs -0 chmod 644
 
 # remove not packaged files
@@ -137,7 +121,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_iconsdir}/*.png
 %{_liconsdir}/*.png
 %{_miconsdir}/*.png
-%{_menudir}/qcad
 %{_datadir}/qcad/*
 %{_datadir}/applications/*.desktop
 
