@@ -19,7 +19,7 @@ Patch5:		qcad-2.0.5.0-1-release_translations.patch
 URL: 		http://www.qcad.org
 License: 	GPL 
 Group: 		Graphics
-BuildRequires: 	XFree86-devel
+BuildRequires: 	X11-devel
 BuildRequires:	jpeg-devel
 BuildRequires:  png-devel
 BuildRequires:  zlib-devel
