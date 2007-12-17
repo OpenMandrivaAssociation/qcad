@@ -26,7 +26,6 @@ BuildRequires:  zlib-devel
 BuildRequires:	qt3-devel
 BuildRequires:	qt3-static-devel
 BuildRequires:	unzip
-BuildRoot: 	%{_tmppath}/%{name}-%{version}-root
 
 %description
 QCad is a professional CAD System. With QCad you can easily construct
