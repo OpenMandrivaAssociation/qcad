@@ -1,12 +1,11 @@
 %define	name	qcad
 %define	version	2.0.5.0
 %define manver	2.0.4.0-1
-%define	release	4
 
 Summary: 	A professional CAD system
 Name: 		%{name}
 Version: 	%{version}
-Release: 	%mkrel %{release}
+Release: 	%mkrel 5
 Source0:	http://www.ribbonsoft.com/archives/qcad/qcad-%{version}-1-community.src.tar.bz2
 Source1: 	icons-%{name}.tar.bz2
 Source2:	http://www.ribbonsoft.com/archives/qcad/qcad-manual-en-%{manver}.html.zip
