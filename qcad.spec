@@ -104,11 +104,15 @@ find $RPM_BUILD_ROOT%_datadir/ -type f  -print0 | xargs -0 chmod 644
 # remove not packaged files
 rm $RPM_BUILD_ROOT%_includedir -rf
 
+%if %mdkversion < 200900
 %post
 %{update_menus}
+%endif
 
+%if %mdkversion < 200900
 %postun
 %{clean_menus}
+%endif
 
 %clean
 rm -rf $RPM_BUILD_ROOT
