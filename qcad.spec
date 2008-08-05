@@ -15,6 +15,7 @@ Patch2:		qcad-2.0.5.0-1-path.patch
 Patch3:		qcad-2.0.4.0-1-manfix.patch
 Patch4:		qcad-2.0.5.0-1-nopedantic.patch
 Patch5:		qcad-2.0.5.0-1-release_translations.patch
+Patch6:		qcad-2.0.5.0-1-gcc43.patch
 URL: 		http://www.qcad.org
 License: 	GPL 
 Group: 		Graphics
@@ -42,6 +43,7 @@ CAD-systems such as AutoCAD(TM) and many others.
 %patch3 -p1 -b .manfix
 %patch4 -p1 -b .nopedantic
 %patch5 -p1 -b .rtsh
+%patch6 -p1 -b .gcc43
 perl -pi -e 's!\@BINDIR\@!%_bindir!;s!\@DATADIR\@!%_datadir!' qcad/src/qc_applicationwindow.cpp
 chmod +x scripts/release_translations.sh
 
