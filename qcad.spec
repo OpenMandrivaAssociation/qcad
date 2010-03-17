@@ -5,7 +5,7 @@
 Summary: 	A professional CAD system
 Name: 		%{name}
 Version: 	%{version}
-Release: 	%mkrel 5
+Release: 	%mkrel 6
 Source0:	http://www.ribbonsoft.com/archives/qcad/qcad-%{version}-1-community.src.tar.bz2
 Source1: 	icons-%{name}.tar.bz2
 Source2:	http://www.ribbonsoft.com/archives/qcad/qcad-manual-en-%{manver}.html.zip
