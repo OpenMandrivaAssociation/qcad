@@ -19,12 +19,9 @@ Patch6:		qcad-2.0.5.0-1-gcc43.patch
 URL: 		http://www.qcad.org
 License: 	GPL 
 Group: 		Graphics
-BuildRequires: 	X11-devel
-BuildRequires:	jpeg-devel
-BuildRequires:  png-devel
-BuildRequires:  zlib-devel
-BuildRequires:	qt3-devel
-BuildRequires:	qt3-static-devel
+BuildRequires: 	qt3-devel
+BuildRequires:	libx11-devel
+BuildRequires:	libxext-devel
 BuildRequires:	unzip
 BuildRoot: 	%{_tmppath}/%{name}-%{version}-root
 
@@ -49,7 +46,7 @@ chmod +x scripts/release_translations.sh
 
 %build
 # QTDIR is always set to /usr/lib/qt3
-export QTDIR=%{_prefix}/lib/qt3
+export QTDIR=%{qt3dir}
 export PATH=$PATH:$QTDIR/bin
 %ifarch x86_64
 export QMAKESPEC=$QTDIR/mkspecs/linux-g++-64
@@ -93,7 +90,7 @@ Exec=%{_bindir}/qcad %f
 Icon=qcad
 Terminal=false
 Type=Application
-Categories=Office;Chart;
+Categories=Office;Chart;Qt;
 StartupNotify=true
 EOF
 
