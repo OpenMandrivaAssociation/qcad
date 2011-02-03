@@ -5,7 +5,7 @@
 Summary: 	A professional CAD system
 Name: 		%{name}
 Version: 	%{version}
-Release: 	%mkrel 8
+Release: 	%mkrel 9
 Source0:	http://www.ribbonsoft.com/archives/qcad/qcad-%{version}-1-community.src.tar.bz2
 Source1: 	icons-%{name}.tar.bz2
 Source2:	http://www.ribbonsoft.com/archives/qcad/qcad-manual-en-%{manver}.html.zip
@@ -20,8 +20,6 @@ URL: 		http://www.qcad.org
 License: 	GPL 
 Group: 		Graphics
 BuildRequires: 	qt3-devel
-BuildRequires:	libx11-devel
-BuildRequires:	libxext-devel
 BuildRequires:	unzip
 BuildRoot: 	%{_tmppath}/%{name}-%{version}-root
 
