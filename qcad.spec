@@ -59,28 +59,28 @@ CXXFLAGS="%{optflags}" \
 popd
 
 %install
-rm -rf $RPM_BUILD_ROOT
-install -m 755 -d $RPM_BUILD_ROOT%_bindir \
-	$RPM_BUILD_ROOT%_libdir/qcad \
-	$RPM_BUILD_ROOT%_iconsdir \
-        $RPM_BUILD_ROOT%_datadir/%name \
-	$RPM_BUILD_ROOT%_datadir/qcad/doc \
-	$RPM_BUILD_ROOT%_datadir/qcad/library
+rm -rf %{buildroot}
+install -m 755 -d %{buildroot}%_bindir \
+	%{buildroot}%_libdir/qcad \
+	%{buildroot}%_iconsdir \
+        %{buildroot}%_datadir/%name \
+	%{buildroot}%_datadir/qcad/doc \
+	%{buildroot}%_datadir/qcad/library
 
 pushd $RPM_BUILD_DIR/%{name}-%{version}-1-community.src/qcad
-	cp -p qcad $RPM_BUILD_ROOT/%_bindir/
+	cp -p qcad %{buildroot}/%_bindir/
 	for i in {data,fonts,library,machines,patterns,qm}; do
-		cp -r $i $RPM_BUILD_ROOT/%_datadir/%name
+		cp -r $i %{buildroot}/%_datadir/%name
 	done
 popd
-cp -rfp qcad-manual-en-%{manver}.html/* $RPM_BUILD_ROOT/%_datadir/qcad/doc
+cp -rfp qcad-manual-en-%{manver}.html/* %{buildroot}/%_datadir/qcad/doc
 
 # icons
-tar xjf %SOURCE1 -C $RPM_BUILD_ROOT%{_iconsdir}
+tar xjf %SOURCE1 -C %{buildroot}%{_iconsdir}
 
 # desktop
-install -m 755 -d $RPM_BUILD_ROOT%{_datadir}/applications
-cat > $RPM_BUILD_ROOT%{_datadir}/applications/mandriva-%{name}.desktop <<EOF
+install -m 755 -d %{buildroot}%{_datadir}/applications
+cat > %{buildroot}%{_datadir}/applications/mandriva-%{name}.desktop <<EOF
 [Desktop Entry]
 Name=Qcad
 Comment=A professional CAD system
@@ -93,13 +93,13 @@ StartupNotify=true
 EOF
 
 # fix permissions
-find $RPM_BUILD_ROOT%_bindir/ -type d -print0 | xargs -0 chmod 755
-find $RPM_BUILD_ROOT%_libdir/ -type d -print0 | xargs -0 chmod 755
-find $RPM_BUILD_ROOT%_datadir/ -type d -print0 | xargs -0 chmod 755
-find $RPM_BUILD_ROOT%_datadir/ -type f  -print0 | xargs -0 chmod 644
+find %{buildroot}%_bindir/ -type d -print0 | xargs -0 chmod 755
+find %{buildroot}%_libdir/ -type d -print0 | xargs -0 chmod 755
+find %{buildroot}%_datadir/ -type d -print0 | xargs -0 chmod 755
+find %{buildroot}%_datadir/ -type f  -print0 | xargs -0 chmod 644
 
 # remove not packaged files
-rm $RPM_BUILD_ROOT%_includedir -rf
+rm %{buildroot}%_includedir -rf
 
 %if %mdkversion < 200900
 %post
@@ -112,7 +112,7 @@ rm $RPM_BUILD_ROOT%_includedir -rf
 %endif
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root)
