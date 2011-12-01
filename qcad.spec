@@ -67,7 +67,7 @@ install -m 755 -d %{buildroot}%_bindir \
 	%{buildroot}%_datadir/qcad/doc \
 	%{buildroot}%_datadir/qcad/library
 
-pushd $RPM_BUILD_DIR/%{name}-%{version}-1-community.src/qcad
+pushd %{_builddir}/%{name}-%{version}-1-community.src/qcad
 	cp -p qcad %{buildroot}/%_bindir/
 	for i in {data,fonts,library,machines,patterns,qm}; do
 		cp -r $i %{buildroot}/%_datadir/%name
