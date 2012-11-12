@@ -1,0 +1,34 @@
+diff -up qcad-2.0.5.0-1-community.src/qcadactions/src/rs_actionzoompan.cpp.gcc43 qcad-2.0.5.0-1-community.src/qcadactions/src/rs_actionzoompan.cpp
+--- qcad-2.0.5.0-1-community.src/qcadactions/src/rs_actionzoompan.cpp.gcc43	2008-02-22 21:46:34.000000000 +0100
++++ qcad-2.0.5.0-1-community.src/qcadactions/src/rs_actionzoompan.cpp	2008-02-22 21:47:06.000000000 +0100
+@@ -27,6 +27,7 @@
+ #include "rs_actionzoompan.h"
+ #include "rs_snapper.h"
+ #include "rs_point.h"
++#include <cstdlib>
+ 
+ 
+ RS_ActionZoomPan::RS_ActionZoomPan(RS_EntityContainer& container,
+diff -up qcad-2.0.5.0-1-community.src/dxflib/src/dl_writer.h.gcc43 qcad-2.0.5.0-1-community.src/dxflib/src/dl_writer.h
+--- qcad-2.0.5.0-1-community.src/dxflib/src/dl_writer.h.gcc43	2008-02-22 21:48:05.000000000 +0100
++++ qcad-2.0.5.0-1-community.src/dxflib/src/dl_writer.h	2008-02-22 21:49:06.000000000 +0100
+@@ -28,6 +28,8 @@
+ #ifndef DL_WRITER_H
+ #define DL_WRITER_H
+ 
++#include <cstring>
++
+ #if _MSC_VER > 1000
+ #pragma once
+ #endif // _MSC_VER > 1000
+diff -up qcad-2.0.5.0-1-community.src/qcadlib/src/information/rs_information.cpp.gcc43 qcad-2.0.5.0-1-community.src/qcadlib/src/information/rs_information.cpp
+--- qcad-2.0.5.0-1-community.src/qcadlib/src/information/rs_information.cpp.gcc43	2008-02-22 21:50:37.000000000 +0100
++++ qcad-2.0.5.0-1-community.src/qcadlib/src/information/rs_information.cpp	2008-02-22 21:51:02.000000000 +0100
+@@ -27,6 +27,7 @@
+ #include "rs_information.h"
+ 
+ #include "rs_constructionline.h"
++#include <cstdlib>
+ 
+ 
+ /**

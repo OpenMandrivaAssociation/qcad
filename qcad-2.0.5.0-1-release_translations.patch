@@ -1,0 +1,27 @@
+--- qcad-2.0.5.0-1-community.src/scripts/release_translations.sh.rtsh	2007-03-15 19:12:40.000000000 +0100
++++ qcad-2.0.5.0-1-community.src/scripts/release_translations.sh	2007-03-15 19:34:21.000000000 +0100
+@@ -0,0 +1,24 @@
++#!/bin/bash
++
++cd ..
++cwd=`pwd`
++
++for dir in qcadactions qcadguiqt qcadcmd qcadlib
++do
++	pushd $dir/src
++	echo "running lrelease in $dir/src..."
++	find -type f -name '*.ts' -exec $QTDIR/bin/lrelease '{}' \;
++	find -type f -name '*.pro' -exec $QTDIR/bin/lrelease '{}' \;
++	popd
++	
++	pushd $dir/src/ts
++		echo "copying from $dir/src/ts..."
++		for tf in *.qm
++		do
++			if [ ! -e $cwd/qcad/qm/$tf ]
++			then
++				cp -p $cwd/$dir/src/ts/$tf $cwd/qcad/qm/$tf
++			fi
++		done
++	popd
++done
