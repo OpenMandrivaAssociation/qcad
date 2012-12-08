@@ -5,7 +5,7 @@
      << " pen: " << l.getPen()
  	<< " frozen: " << (int)l.isFrozen()
 -	<< " address: " << (int)(&l)
-+	<< " address: " << (intptr_t)(&l)
++	<< " address: " << (&l)
      << std::endl;
      return os;
  }
@@ -16,7 +16,7 @@
      } else {
          os << " layer: " << e.layer->getName().latin1() << " ";
 -        os << " layer address: " << (int)(e.layer) << " ";
-+        os << " layer address: " << (intptr_t)(e.layer) << " ";
++        os << " layer address: " << (e.layer) << " ";
      }
  
      os << e.pen << "\n";
