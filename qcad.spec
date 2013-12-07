@@ -3,7 +3,7 @@
 Summary:	A professional CAD system
 Name:		qcad
 Version:	2.0.5.0
-Release:	12
+Release:	13
 License:	GPLv2
 Group:		Graphics
 Url:		http://www.qcad.org
