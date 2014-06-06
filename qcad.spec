@@ -1,24 +1,18 @@
-%define manver	2.0.4.0-1
-
 Summary:	A professional CAD system
 Name:		qcad
-Version:	2.0.5.0
-Release:	15
-License:	GPLv2
+Version:	3.5.1.0
+Release:	1
 Group:		Graphics
-Url:		http://www.qcad.org
-Source0:	http://www.ribbonsoft.com/archives/qcad/qcad-%{version}-1-community.src.tar.bz2
-Source1:	icons-%{name}.tar.bz2
-Source2:	http://www.ribbonsoft.com/archives/qcad/qcad-manual-en-%{manver}.html.zip
-Patch0:		qcad-2.0.4.0-1-x86_64.patch
-Patch1:		qcad-2.0.4.0-1-assistant.patch
-Patch2:		qcad-2.0.5.0-1-path.patch
-Patch3:		qcad-2.0.4.0-1-manfix.patch
-Patch4:		qcad-2.0.5.0-1-nopedantic.patch
-Patch5:		qcad-2.0.5.0-1-release_translations.patch
-Patch6:		qcad-2.0.5.0-1-gcc43.patch
-BuildRequires:	qt3-devel
-BuildRequires:	unzip
+License:	GPLv3 with exceptions, CC-BY, GPLv2+, LGPLv2.1, BSD
+URL:		http://www.qcad.org
+#https://github.com/qcad/qcad/archive/v%{version}.zip
+Source0:	qcad-%{version}.zip
+Patch0:		qcad-3.4.6.0-fix-linking.patch
+
+BuildRequires:	qt4-devel
+BuildRequires:	pkgconfig(QtWebKit)
+BuildRequires:	pkgconfig(glu)
+BuildRequires:	pkgconfig(gl)
 
 %description
 QCad is a professional CAD System. With QCad you can easily construct
@@ -27,77 +21,72 @@ them as DXF-files. These DXF-files are the interface to many
 CAD-systems such as AutoCAD(TM) and many others.
 
 %prep
-%setup -qn %{name}-%{version}-1-community.src
-%setup -q -T -D -a 2 -n %{name}-%{version}-1-community.src
-%apply_patches
-
-perl -pi -e 's!\@BINDIR\@!%{_bindir}!;s!\@DATADIR\@!%{_datadir}!' qcad/src/qc_applicationwindow.cpp
-chmod +x scripts/release_translations.sh
+%setup -q
+%patch0 -p0
+find . -name ".gitignore" -delete
+cp -a src/3rdparty/qt-labs-qtscriptgenerator-4.8.5 src/3rdparty/qt-labs-qtscriptgenerator-4.8.6
+cd src/3rdparty/qt-labs-qtscriptgenerator-4.8.6 && mv -f qt-labs-qtscriptgenerator-4.8.5.pro qt-labs-qtscriptgenerator-4.8.6.pro
 
 %build
-# QTDIR is always set to /usr/lib/qt3
-export QTDIR=%{qt3dir}
-export PATH=$PATH:$QTDIR/bin
-%ifarch x86_64
-export QMAKESPEC=$QTDIR/mkspecs/linux-g++-64
-%else
-export QMAKESPEC=$QTDIR/mkspecs/linux-g++
-%endif
-
-pushd scripts
-CFLAGS="%{optflags}" \
-CXXFLAGS="%{optflags}" \
-./build_qcad.sh
-popd
+%qmake_qt4
+%make
 
 %install
-install -m 755 -d %{buildroot}%{_bindir} \
-	%{buildroot}%{_libdir}/qcad \
-	%{buildroot}%{_iconsdir} \
-        %{buildroot}%{_datadir}/%{name} \
-	%{buildroot}%{_datadir}/qcad/doc \
-	%{buildroot}%{_datadir}/qcad/library
 
-pushd qcad
-	cp -p qcad %{buildroot}%{_bindir}/
-	for i in {data,fonts,library,machines,patterns,qm}; do
-		cp -r $i %{buildroot}%{_datadir}/%{name}
-	done
-popd
-cp -rfp qcad-manual-en-%{manver}.html/* %{buildroot}%{_datadir}/qcad/doc
+# remove project files
+find . \( -name '*.pri' -or -name '.pro' -or -name '*.ts' \) -delete
+find . \( -name 'Makefile*' -name '.gitignore' \) -delete
 
-# icons
-tar xjf %{SOURCE1} -C %{buildroot}%{_iconsdir}
+install -dm755 %{buildroot}%{_datadir}/%{name}
+cp -r examples fonts libraries patterns plugins scripts ts %{buildroot}%{_datadir}/%{name}
+cp release/* %{buildroot}%{_datadir}/%{name}
+
+# qt
+for sofiles in %{qt4plugins}/imageformats/*.so
+do
+    ln -sf ${sofiles} %{buildroot}%{_datadir}/%{name}/plugins/imageformats/${sofiles##/*/}
+done
+
+for sofiles in %{qt4plugins}/sqldrivers/*.so
+do
+    ln -sf ${sofiles} %{buildroot}%{_datadir}/%{name}/plugins/sqldrivers/${sofiles##/*/}
+done
+
+install -Dm644 scripts/qcad_icon.png %{buildroot}%{_iconsdir}/qcad_icon.png
+
+install -dm0755 %{buildroot}%{_bindir}
+echo -e '#!/bin/sh\ncd %{_datadir}/%{name}\nLD_LIBRARY_PATH=`pwd`:$LD_LIBRARY_PATH exec ./qcad-bin' > %{buildroot}%{_bindir}/%{name}
+chmod 0755 %{buildroot}%{_bindir}/%{name}
+
+rm -f %{buildroot}%{_datadir}/%{name}/*.a
+
+install -dm0755 %{buildroot}%{_libdir}
+mv %{buildroot}%{_datadir}/%{name}/*.so %{buildroot}%{_libdir}
 
 # desktop
 install -m 755 -d %{buildroot}%{_datadir}/applications
-cat > %{buildroot}%{_datadir}/applications/mandriva-%{name}.desktop <<EOF
+cat > %{buildroot}%{_datadir}/applications/%{name}.desktop <<EOF
 [Desktop Entry]
+Encoding=UTF-8
 Name=Qcad
+Name[ru]=Qcad
 Comment=A professional CAD system
-Exec=%{_bindir}/qcad %f
-Icon=qcad
+Comment[ru]=Профессиональная CAD система
+Exec=%{name}
+Icon=qcad_icon
 Terminal=false
 Type=Application
 Categories=Office;Chart;Qt;
 StartupNotify=true
 EOF
 
-# fix permissions
-find %{buildroot}%{_bindir}/ -type d -print0 | xargs -0 chmod 755
-find %{buildroot}%{_libdir}/ -type d -print0 | xargs -0 chmod 755
-find %{buildroot}%{_datadir}/ -type d -print0 | xargs -0 chmod 755
-find %{buildroot}%{_datadir}/ -type f  -print0 | xargs -0 chmod 644
-
-# remove not packaged files
-rm -rf %{buildroot}%{_includedir}
-
 %files
-%doc qcad/README
-%attr(755,root,root) %{_bindir}/qcad
+%doc readme.txt LICENSE.txt README.md gpl-3.0.txt cc-by-3.0.txt gpl-3.0-exceptions.txt
+%{_bindir}/%{name}
+%{_libdir}/*.so
 %{_iconsdir}/*.png
-%{_liconsdir}/*.png
-%{_miconsdir}/*.png
-%{_datadir}/qcad/*
+%dir %{_datadir}/%{name}
+%{_datadir}/%{name}/*
 %{_datadir}/applications/*.desktop
+
 
