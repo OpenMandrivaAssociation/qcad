@@ -1,13 +1,12 @@
 Summary:	A professional CAD system
 Name:		qcad
-Version:	3.5.1.0
-Release:	4
+Version:	3.7.7.0
+Release:	1
 Group:		Graphics
 License:	GPLv3 with exceptions, CC-BY, GPLv2+, LGPLv2.1, BSD
 URL:		http://www.qcad.org
 #https://github.com/qcad/qcad/archive/v%{version}.zip
 Source0:	qcad-%{version}.zip
-Patch0:		qcad-3.4.6.0-fix-linking.patch
 
 BuildRequires:	qt4-devel
 BuildRequires:	pkgconfig(QtWebKit)
@@ -22,10 +21,7 @@ CAD-systems such as AutoCAD(TM) and many others.
 
 %prep
 %setup -q
-%patch0 -p0
 find . -name ".gitignore" -delete
-cp -a src/3rdparty/qt-labs-qtscriptgenerator-4.8.5 src/3rdparty/qt-labs-qtscriptgenerator-4.8.6
-cd src/3rdparty/qt-labs-qtscriptgenerator-4.8.6 && mv -f qt-labs-qtscriptgenerator-4.8.5.pro qt-labs-qtscriptgenerator-4.8.6.pro
 
 %build
 %qmake_qt4

@@ -1,4 +1,6 @@
+removed_sources:
+  qcad-3.5.1.0.zip: c91ed7d17ce128bddcb05c98a0021a2a55738338
 sources:
   icons-qcad.tar.bz2: 094f19792d1df6b6ec33580794a52a844e5c402a
-  qcad-3.5.1.0.zip: c91ed7d17ce128bddcb05c98a0021a2a55738338
+  qcad-3.7.7.0.zip: e9827054df32fc645c315c7784ce59a3c617cb0b
   qcad-manual-en-2.0.4.0-1.html.zip: 993d3ad64ac226278e51060a43613506aca31656
