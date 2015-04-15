@@ -1,6 +1,6 @@
 Summary:	A professional CAD system
 Name:		qcad
-Version:	3.7.7.0
+Version:	3.9.1.3
 Release:	1
 Group:		Graphics
 License:	GPLv3 with exceptions, CC-BY, GPLv2+, LGPLv2.1, BSD
@@ -9,6 +9,7 @@ URL:		http://www.qcad.org
 Source0:	qcad-%{version}.zip
 
 BuildRequires:	qt4-devel
+BuildRequires:	quazip-devel
 BuildRequires:	pkgconfig(QtWebKit)
 BuildRequires:	pkgconfig(glu)
 BuildRequires:	pkgconfig(gl)
@@ -84,5 +85,3 @@ EOF
 %dir %{_datadir}/%{name}
 %{_datadir}/%{name}/*
 %{_datadir}/applications/*.desktop
-
-
