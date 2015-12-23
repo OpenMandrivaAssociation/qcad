@@ -9,8 +9,16 @@ URL:		http://www.qcad.org
 Source0:	qcad-%{version}.zip
 
 BuildRequires:	qt5-devel
+BuildRequires:	pkgconfig(Qt5WebKitWidgets)
+BuildRequires:	pkgconfig(Qt5Script)
+BuildRequires:  pkgconfig(Qt5ScriptTools)
+BuildRequires:	pkgconfig(Qt5Svg)
+BuildRequires:	pkgconfig(Qt5XmlPatterns)
+BuildRequires:	pkgconfig(Qt5Help)
+BuildRequires:	pkgconfig(Qt5UiTools)
+BuildRequires:	pkgconfig(Qt5Designer)
+
 BuildRequires:	quazip-devel
-BuildRequires:	pkgconfig(QtWebKit)
 BuildRequires:	pkgconfig(glu)
 BuildRequires:	pkgconfig(gl)
 
