@@ -47,12 +47,12 @@ cp -r examples fonts libraries patterns plugins scripts ts %{buildroot}%{_datadi
 cp release/* %{buildroot}%{_datadir}/%{name}
 
 # qt
-for sofiles in %{qt4plugins}/imageformats/*.so
+for sofiles in %{_qt5_plugindir}/imageformats/*.so
 do
     ln -sf ${sofiles} %{buildroot}%{_datadir}/%{name}/plugins/imageformats/${sofiles##/*/}
 done
 
-for sofiles in %{qt4plugins}/sqldrivers/*.so
+for sofiles in %{_qt5_plugindir}/sqldrivers/*.so
 do
     ln -sf ${sofiles} %{buildroot}%{_datadir}/%{name}/plugins/sqldrivers/${sofiles##/*/}
 done
