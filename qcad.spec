@@ -1,14 +1,14 @@
 Summary:	A professional CAD system
 Name:		qcad
-Version:	3.9.2.0
-Release:	3
+Version:	3.12.4.0
+Release:	1
 Group:		Graphics
 License:	GPLv3 with exceptions, CC-BY, GPLv2+, LGPLv2.1, BSD
 URL:		http://www.qcad.org
 #https://github.com/qcad/qcad/archive/v%{version}.zip
 Source0:	qcad-%{version}.zip
 
-BuildRequires:	qt4-devel
+BuildRequires:	qt5-devel
 BuildRequires:	quazip-devel
 BuildRequires:	pkgconfig(QtWebKit)
 BuildRequires:	pkgconfig(glu)
@@ -25,7 +25,7 @@ CAD-systems such as AutoCAD(TM) and many others.
 find . -name ".gitignore" -delete
 
 %build
-%qmake_qt4
+%qmake_qt5
 %make
 
 %install
