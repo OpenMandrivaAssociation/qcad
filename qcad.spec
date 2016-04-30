@@ -1,12 +1,11 @@
 Summary:	A professional CAD system
 Name:		qcad
-Version:	3.12.4.0
+Version:	3.14.3.0
 Release:	1
 Group:		Graphics
 License:	GPLv3 with exceptions, CC-BY, GPLv2+, LGPLv2.1, BSD
 URL:		http://www.qcad.org
-#https://github.com/qcad/qcad/archive/v%{version}.zip
-Source0:	qcad-%{version}.zip
+Source0:	https://github.com/qcad/qcad/archive/v%{version}.tar.gz
 
 BuildRequires:	qt5-devel
 BuildRequires:	pkgconfig(Qt5WebKitWidgets)
@@ -17,6 +16,7 @@ BuildRequires:	pkgconfig(Qt5XmlPatterns)
 BuildRequires:	pkgconfig(Qt5Help)
 BuildRequires:	pkgconfig(Qt5UiTools)
 BuildRequires:	pkgconfig(Qt5Designer)
+BuildRequires:	cmake(Qt5WebEngineWidgets)
 
 BuildRequires:	quazip-devel
 BuildRequires:	pkgconfig(glu)
