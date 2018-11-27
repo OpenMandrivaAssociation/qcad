@@ -1,7 +1,7 @@
 Summary:	A professional CAD system
 Name:		qcad
-Version:	3.14.3.0
-Release:	2
+Version:	3.21.3.10
+Release:	1
 Group:		Graphics
 License:	GPLv3 with exceptions, CC-BY, GPLv2+, LGPLv2.1, BSD
 URL:		http://www.qcad.org
@@ -17,10 +17,12 @@ BuildRequires:	pkgconfig(Qt5Help)
 BuildRequires:	pkgconfig(Qt5UiTools)
 BuildRequires:	pkgconfig(Qt5Designer)
 BuildRequires:	cmake(Qt5WebEngineWidgets)
+BuildRequires:	cmake(Qt5ScriptTools)
 
 BuildRequires:	quazip-devel
 BuildRequires:	pkgconfig(glu)
 BuildRequires:	pkgconfig(gl)
+BuildRequires:	pkgconfig(zlib)
 
 %description
 QCad is a professional CAD System. With QCad you can easily construct
