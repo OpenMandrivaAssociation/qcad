@@ -1,3 +1,6 @@
+# cb - 20181202 - lto causes rcc error 'no data signature found'
+%define _disable_lto 1
+
 Summary:	A professional CAD system
 Name:		qcad
 Version:	3.21.3.10
@@ -6,6 +9,7 @@ Group:		Graphics
 License:	GPLv3 with exceptions, CC-BY, GPLv2+, LGPLv2.1, BSD
 URL:		http://www.qcad.org
 Source0:	https://github.com/qcad/qcad/archive/v%{version}.tar.gz
+Patch1:		qcad-system-quazip.patch
 
 BuildRequires:	qt5-devel
 BuildRequires:	pkgconfig(Qt5WebKitWidgets)
@@ -32,6 +36,7 @@ CAD-systems such as AutoCAD(TM) and many others.
 
 %prep
 %setup -q
+%apply_patches
 find . -name ".gitignore" -delete
 
 cp -a src/3rdparty/qt-labs-qtscriptgenerator-5.9.5 src/3rdparty/qt-labs-qtscriptgenerator-5.9.7
