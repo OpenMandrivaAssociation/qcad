@@ -34,6 +34,10 @@ CAD-systems such as AutoCAD(TM) and many others.
 %setup -q
 find . -name ".gitignore" -delete
 
+cp -a src/3rdparty/qt-labs-qtscriptgenerator-5.9.5 src/3rdparty/qt-labs-qtscriptgenerator-5.9.7
+mv src/3rdparty/qt-labs-qtscriptgenerator-5.9.7/qt-labs-qtscriptgenerator-5.9.5.pro \
+src/3rdparty/qt-labs-qtscriptgenerator-5.9.7/qt-labs-qtscriptgenerator-5.9.7.pro
+
 %build
 %qmake_qt5
 %make
