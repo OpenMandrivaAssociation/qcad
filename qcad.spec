@@ -3,12 +3,12 @@
 
 Summary:	A professional CAD system
 Name:		qcad
-Version:	3.21.3.10
+Version:	3.21.3.14
 Release:	1
 Group:		Graphics
 License:	GPLv3 with exceptions, CC-BY, GPLv2+, LGPLv2.1, BSD
 URL:		http://www.qcad.org
-Source0:	https://github.com/qcad/qcad/archive/v%{version}.tar.gz
+Source0:	https://github.com/qcad/qcad/archive/v3.21.3.14/%{name}-%{version}.tar.gz
 Patch1:		qcad-system-quazip.patch
 
 BuildRequires:	qt5-devel
