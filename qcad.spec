@@ -3,13 +3,12 @@
 
 Summary:	A professional CAD system
 Name:		qcad
-Version:	3.21.3.10
-Release:	2
+Version:	3.23.0.2
+Release:	1
 Group:		Graphics
 License:	GPLv3 with exceptions, CC-BY, GPLv2+, LGPLv2.1, BSD
 URL:		http://www.qcad.org
 Source0:	https://github.com/qcad/qcad/archive/v%{version}.tar.gz
-Patch1:		qcad-system-quazip.patch
 
 BuildRequires:	qt5-devel
 BuildRequires:	pkgconfig(Qt5WebKitWidgets)
@@ -28,6 +27,26 @@ BuildRequires:	pkgconfig(glu)
 BuildRequires:	pkgconfig(gl)
 BuildRequires:	pkgconfig(zlib)
 
+BuildRequires:  pkgconfig(Qt5Concurrent)
+BuildRequires:  pkgconfig(Qt5Core)
+BuildRequires:  pkgconfig(Qt5Gui)
+BuildRequires:  pkgconfig(Qt5Designer)
+BuildRequires:  pkgconfig(Qt5Network)
+BuildRequires:  pkgconfig(Qt5OpenGL)
+BuildRequires:  pkgconfig(Qt5PrintSupport)
+BuildRequires:  pkgconfig(Qt5Qml)
+BuildRequires:  pkgconfig(Qt5Quick)
+BuildRequires:  pkgconfig(Qt5Script)
+BuildRequires:  pkgconfig(Qt5Sql)
+BuildRequires:  pkgconfig(Qt5Svg)
+BuildRequires:  pkgconfig(Qt5WebChannel)
+BuildRequires:  pkgconfig(Qt5WebEngine)
+BuildRequires:  pkgconfig(Qt5Xml)
+BuildRequires:  pkgconfig(Qt5XmlPatterns)
+BuildRequires:  pkgconfig(Qt5ScriptTools)
+BuildRequires:  pkgconfig(Qt5Help)
+BuildRequires:  pkgconfig(glu)
+
 %description
 QCad is a professional CAD System. With QCad you can easily construct
 and change drawings with ISO-text and many other features and save
@@ -38,6 +57,17 @@ CAD-systems such as AutoCAD(TM) and many others.
 %setup -q
 %apply_patches
 find . -name ".gitignore" -delete
+rm -rf src/3rdparty/quazip/src
+
+mkdir -p src/3rdparty/qt-labs-qtscriptgenerator-5.13.1/
+cat <<EOF > qt-labs-qtscriptgenerator-5.13.1.pro
+include( ../../../shared.pri )
+
+SUBDIRS = ../qt-labs-qtscriptgenerator-5.5.0/qtbindings
+TEMPLATE = subdirs
+EOF
+
+mv qt-labs-qtscriptgenerator-5.13.1.pro src/3rdparty/qt-labs-qtscriptgenerator-5.13.1/
 
 %build
 %qmake_qt5
