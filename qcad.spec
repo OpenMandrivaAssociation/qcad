@@ -55,7 +55,7 @@ CAD-systems such as AutoCAD(TM) and many others.
 
 %prep
 %setup -q
-%apply_patches
+%autopatch -p1
 find . -name ".gitignore" -delete
 rm -rf src/3rdparty/quazip/src
 
