@@ -3,7 +3,7 @@
 
 Summary:	A professional CAD system
 Name:		qcad
-Version:	3.23.0.3
+Version:	3.24.2.1
 Release:	1
 Group:		Graphics
 License:	GPLv3 with exceptions, CC-BY, GPLv2+, LGPLv2.1, BSD
@@ -57,6 +57,8 @@ CAD-systems such as AutoCAD(TM) and many others.
 %setup -q
 %autopatch -p1
 find . -name ".gitignore" -delete
+sed -e 's|$${QT_VERSION}|5.5.0|g' \
+      -i src/3rdparty/3rdparty.pro # Don't require specific Qt version
 rm -rf src/3rdparty/quazip/src
 
 mkdir -p src/3rdparty/qt-labs-qtscriptgenerator-5.13.1/
