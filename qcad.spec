@@ -57,6 +57,8 @@ CAD-systems such as AutoCAD(TM) and many others.
 %setup -q
 %autopatch -p1
 find . -name ".gitignore" -delete
+sed -e 's|$${QT_VERSION}|5.5.0|g' \
+      -i src/3rdparty/3rdparty.pro # Don't require specific Qt version
 rm -rf src/3rdparty/quazip/src
 
 mkdir -p src/3rdparty/qt-labs-qtscriptgenerator-5.13.1/
