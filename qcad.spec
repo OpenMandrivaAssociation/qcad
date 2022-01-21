@@ -3,12 +3,12 @@
 
 Summary:	A professional CAD system
 Name:		qcad
-Version:	3.25.2.12
+Version:	3.27.1.3
 Release:	1
 Group:		Graphics
 License:	GPLv3 with exceptions, CC-BY, GPLv2+, LGPLv2.1, BSD
 URL:		http://www.qcad.org
-Source0:	https://github.com/qcad/qcad/archive/v%{version}.tar.gz
+Source0:	https://github.com/qcad/qcad/archive/%{name}-%{version}.tar.gz
 
 BuildRequires:	qt5-devel
 BuildRequires:	pkgconfig(Qt5WebKitWidgets)
@@ -54,8 +54,7 @@ them as DXF-files. These DXF-files are the interface to many
 CAD-systems such as AutoCAD(TM) and many others.
 
 %prep
-%setup -q
-%autopatch -p1
+%autosetup -p1
 find . -name ".gitignore" -delete
 sed -e 's|$${QT_VERSION}|5.5.0|g' \
       -i src/3rdparty/3rdparty.pro # Don't require specific Qt version
