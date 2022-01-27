@@ -1,14 +1,15 @@
 # cb - 20181202 - lto causes rcc error 'no data signature found'
 %define _disable_lto 1
+%define _empty_manifest_terminate_build 0
 
 Summary:	A professional CAD system
 Name:		qcad
-Version:	3.27.1.3
+Version:	3.27.1.4
 Release:	1
 Group:		Graphics
 License:	GPLv3 with exceptions, CC-BY, GPLv2+, LGPLv2.1, BSD
 URL:		http://www.qcad.org
-Source0:	https://github.com/qcad/qcad/archive/%{name}-%{version}.tar.gz
+Source0:	https://github.com/qcad/qcad/archive/refs/tags/v%{version}.tar.gz
 
 BuildRequires:	qt5-devel
 BuildRequires:	pkgconfig(Qt5WebKitWidgets)
@@ -56,56 +57,112 @@ CAD-systems such as AutoCAD(TM) and many others.
 %prep
 %autosetup -p1
 find . -name ".gitignore" -delete
-sed -e 's|$${QT_VERSION}|5.5.0|g' \
-      -i src/3rdparty/3rdparty.pro # Don't require specific Qt version
+# Use system quazip
 rm -rf src/3rdparty/quazip/src
+# Adapt qtscriptgenerator to current Qt
+mkdir src/3rdparty/qt-labs-qtscriptgenerator-5.15.3
+sed -e 's,5.15.2,5.15.3,g' src/3rdparty/qt-labs-qtscriptgenerator-5.15.2/qt-labs-qtscriptgenerator-5.15.2.pro >src/3rdparty/qt-labs-qtscriptgenerator-5.15.3/qt-labs-qtscriptgenerator-5.15.3.pro
 
-mkdir -p src/3rdparty/qt-labs-qtscriptgenerator-5.13.1/
-cat <<EOF > qt-labs-qtscriptgenerator-5.13.1.pro
-include( ../../../shared.pri )
-
-SUBDIRS = ../qt-labs-qtscriptgenerator-5.5.0/qtbindings
-TEMPLATE = subdirs
-EOF
-
-mv qt-labs-qtscriptgenerator-5.13.1.pro src/3rdparty/qt-labs-qtscriptgenerator-5.13.1/
+qmake-qt5 -makefile CONFIG+=release %{name}.pro \
+ QMAKE_CFLAGS_RELEASE="%{optflags} %(pkg-config --cflags Qt5UiTools) -I$PWD/src/3rdparty/spatialindexnavel/include" \
+ QMAKE_CXXFLAGS_RELEASE="%{optflags} %(pkg-config --cflags Qt5UiTools) -I$PWD/src/3rdparty/spatialindexnavel/include" \
+ QMAKE_LFLAGS="%{optflags} -Wl,-rpath -Wl,%{_libdir}/%{name}" \
+ LFLAGS="%{optflags} -Wl,-rpath -Wl,%{_libdir}/%{name}"
 
 %build
-%qmake_qt5
-%make
+%make_build
 
 %install
-
-# remove project files
-find . \( -name '*.pri' -or -name '.pro' -or -name '*.ts' \) -delete
-find . \( -name 'Makefile*' -name '.gitignore' \) -delete
-
-install -dm755 %{buildroot}%{_datadir}/%{name}
-cp -r examples fonts libraries patterns plugins scripts ts %{buildroot}%{_datadir}/%{name}
-cp release/* %{buildroot}%{_datadir}/%{name}
-
-# qt
-for sofiles in %{_qt5_plugindir}/imageformats/*.so
-do
-    ln -sf ${sofiles} %{buildroot}%{_datadir}/%{name}/plugins/imageformats/${sofiles##/*/}
+mkdir -p %{buildroot}%{_libdir}/%{name}/ts
+mkdir -p %{buildroot}%{_datadir}/pixmaps
+mkdir -p %{buildroot}%{_bindir}
+mkdir -p %{buildroot}%{_mandir}/man1
+mkdir -p %{buildroot}%{_datadir}/icons/hicolor/scalable/apps
+mkdir -p %{buildroot}%{_libdir}/qt5/plugins/codecs
+mkdir -p %{buildroot}%{_libdir}/qt5/plugins/script
+mkdir -p %{buildroot}%{_libdir}/qt5/plugins/designer
+mkdir -p %{buildroot}%{_libdir}/qt5/plugins/imageformats
+mkdir -p %{buildroot}%{_libdir}/qt5/plugins/sqldrivers
+mkdir -p %{buildroot}%{_libdir}/%{name}/plugins/codecs
+mkdir -p %{buildroot}%{_libdir}/%{name}/plugins/designer
+mkdir -p %{buildroot}%{_libdir}/%{name}/plugins/imageformats
+mkdir -p %{buildroot}%{_libdir}/%{name}/plugins/sqldrivers
+mkdir -p %{buildroot}%{_libdir}/%{name}/plugins/script
+mkdir -p %{buildroot}%{_libdir}/%{name}/plugins/printsupport
+ 
+## Install fonts
+cp -a fonts %{buildroot}%{_libdir}/%{name}
+ 
+# Unbundle vlgothic-fonts
+ln -sf %{_fontbasedir}/vlgothic/VL-Gothic-Regular.ttf %{buildroot}%{_libdir}/%{name}/fonts/VL-Gothic-Regular.ttf
+ 
+# Unbundle dejavu-sans-fonts
+for i in `ls %{buildroot}%{_libdir}/%{name}/fonts/qt | grep DejaVuSans`; do
+ ln -sf %{_fontbasedir}/dejavu/$i %{buildroot}%{_libdir}/%{name}/fonts/qt/$i
 done
-
-for sofiles in %{_qt5_plugindir}/sqldrivers/*.so
-do
-    ln -sf ${sofiles} %{buildroot}%{_datadir}/%{name}/plugins/sqldrivers/${sofiles##/*/}
+##
+ 
+cp -a patterns %{buildroot}%{_libdir}/%{name}
+cp -a themes %{buildroot}%{_libdir}/%{name}
+cp -a libraries %{buildroot}%{_libdir}/%{name}
+cp -a scripts %{buildroot}%{_libdir}/%{name}
+cp -a plugins %{buildroot}%{_libdir}/%{name}
+cp -a linetypes %{buildroot}%{_libdir}/%{name}
+ 
+# This file is required for Help's "Show Readme" menu choice
+cp -p readme.txt %{buildroot}%{_libdir}/%{name}
+ 
+install -pm 644 ts/qcad*.qm %{buildroot}%{_libdir}/%{name}/ts
+ln -sf %{_libdir}/qt5/plugins/codecs/libqcncodecs.so %{buildroot}%{_libdir}/%{name}/plugins/codecs/libqcncodecs.so
+ln -sf %{_libdir}/qt5/plugins/codecs/libqjpcodecs.so %{buildroot}%{_libdir}/%{name}/plugins/codecs/libqjpcodecs.so
+ln -sf %{_libdir}/qt5/plugins/codecs/libqkrcodecs.so %{buildroot}%{_libdir}/%{name}/plugins/codecs/libqkrcodecs.so
+ln -sf %{_libdir}/qt5/plugins/codecs/libqtwcodecs.so %{buildroot}%{_libdir}/%{name}/plugins/codecs/libqtwcodecs.so
+ 
+ln -sf %{_libdir}/qt5/plugins/designer/libqwebview.so %{buildroot}%{_libdir}/%{name}/plugins/designer/libqwebview.so
+ 
+ln -sf %{_libdir}/qt5/plugins/imageformats/libqgif.so %{buildroot}%{_libdir}/%{name}/plugins/imageformats/libqgif.so
+ln -sf %{_libdir}/qt5/plugins/imageformats/libqico.so %{buildroot}%{_libdir}/%{name}/plugins/imageformats/libqico.so
+ln -sf %{_libdir}/qt5/plugins/imageformats/libqjpeg.so %{buildroot}%{_libdir}/%{name}/plugins/imageformats/libqjpeg.so
+ln -sf %{_libdir}/qt5/plugins/imageformats/libqsvg.so %{buildroot}%{_libdir}/%{name}/plugins/imageformats/libqsvg.so
+ln -sf %{_libdir}/qt5/plugins/imageformats/libqtga.so %{buildroot}%{_libdir}/%{name}/plugins/imageformats/libqtga.so
+ln -sf %{_libdir}/qt5/plugins/imageformats/libqtiff.so %{buildroot}%{_libdir}/%{name}/plugins/imageformats/libqtiff.so
+ 
+ln -sf %{_libdir}/qt5/plugins/sqldrivers/libqsqlite.so %{buildroot}%{_libdir}/%{name}/plugins/sqldrivers/libqsqlite.so
+ln -sf %{_libdir}/qt5/plugins/printsupport/libcupsprintersupport.so %{buildroot}%{_libdir}/%{name}/plugins/printsupport/libcupsprintersupport.so
+ 
+install -pm 644 scripts/qcad_icon.png %{buildroot}%{_datadir}/pixmaps/%{name}.png
+install -pm 755 release/*.so %{buildroot}%{_libdir}/%{name}
+install -pm 755 release/%{name}-bin %{buildroot}%{_libdir}/%{name}
+install -pm 644 readme.txt %{buildroot}%{_libdir}/%{name}
+ 
+install -pm 644 qcad.1 %{buildroot}%{_mandir}/man1
+install -pm 644 scripts/%{name}_icon.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/%{name}.svg
+ 
+find %{buildroot}%{_libdir}/%{name} -name ".gitignore" -delete
+find %{buildroot}%{_libdir}/%{name} -name "readme.txt" -delete
+find %{buildroot}%{_libdir}/%{name} -name "Makefile" -delete
+ 
+pushd %{buildroot}%{_libdir}/%{name}
+for i in `find . -type f \( -name "*.so*" -o -name "qcad-bin" \)`; do
+  chmod -c 755 $i
+  chrpath -r %{_libdir}/%{name} $i
 done
-
-install -Dm644 scripts/qcad_icon.png %{buildroot}%{_iconsdir}/qcad_icon.png
-
-install -dm0755 %{buildroot}%{_bindir}
-echo -e '#!/bin/sh\ncd %{_datadir}/%{name}\nLD_LIBRARY_PATH=`pwd`:$LD_LIBRARY_PATH exec ./qcad-bin' > %{buildroot}%{_bindir}/%{name}
-chmod 0755 %{buildroot}%{_bindir}/%{name}
-
-rm -f %{buildroot}%{_datadir}/%{name}/*.a
-
-install -dm0755 %{buildroot}%{_libdir}
-mv %{buildroot}%{_datadir}/%{name}/*.so %{buildroot}%{_libdir}
-
+popd
+ 
+cat > %{buildroot}%{_bindir}/%{name} <<EOF
+#!/bin/sh
+export \
+LD_LIBRARY_PATH=%{_libdir}/%{name}:%{_libdir}/%{name}/plugins/script \
+QTLIB=%{_libdir} \
+QTDIR=%{_libdir}/qt5 \
+QTINC=%{_includedir}/qt5 \
+WISECONFIGDIR=%{_datadir}/wise2 \
+QT_QPA_PLATFORM=xcb \
+PATH=%{_libdir}:%{_libdir}/%{name}
+%{_libdir}/%{name}/%{name}-bin "\$@"
+EOF
+chmod a+x %{buildroot}%{_bindir}/%{name}
+ 
 # desktop
 install -m 755 -d %{buildroot}%{_datadir}/applications
 cat > %{buildroot}%{_datadir}/applications/%{name}.desktop <<EOF
@@ -126,8 +183,8 @@ EOF
 %files
 %doc readme.txt LICENSE.txt README.md gpl-3.0.txt cc-by-3.0.txt gpl-3.0-exceptions.txt
 %{_bindir}/%{name}
-%{_libdir}/*.so
-%{_iconsdir}/*.png
-%dir %{_datadir}/%{name}
-%{_datadir}/%{name}/*
+%{_libdir}/%{name}
 %{_datadir}/applications/*.desktop
+%{_datadir}/icons/hicolor/scalable/apps/qcad.svg
+%{_mandir}/man1/qcad.1*
+%{_datadir}/pixmaps/qcad.png
