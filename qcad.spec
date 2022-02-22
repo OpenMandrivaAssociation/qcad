@@ -1,6 +1,8 @@
 # cb - 20181202 - lto causes rcc error 'no data signature found'
 %define _disable_lto 1
-%define _empty_manifest_terminate_build 0
+#define _empty_manifest_terminate_build 0
+
+%global qt_version %(qtpaths --qt-version)
 
 Summary:	A professional CAD system
 Name:		qcad
@@ -11,157 +13,161 @@ License:	GPLv3 with exceptions, CC-BY, GPLv2+, LGPLv2.1, BSD
 URL:		http://www.qcad.org
 Source0:	https://github.com/qcad/qcad/archive/refs/tags/v%{version}.tar.gz
 
+BuildRequires:	fontpackages-devel
 BuildRequires:	qt5-devel
-BuildRequires:	pkgconfig(Qt5WebKitWidgets)
-BuildRequires:	pkgconfig(Qt5Script)
-BuildRequires:  pkgconfig(Qt5ScriptTools)
-BuildRequires:	pkgconfig(Qt5Svg)
-BuildRequires:	pkgconfig(Qt5XmlPatterns)
-BuildRequires:	pkgconfig(Qt5Help)
-BuildRequires:	pkgconfig(Qt5UiTools)
-BuildRequires:	pkgconfig(Qt5Designer)
-BuildRequires:	cmake(Qt5WebEngineWidgets)
-BuildRequires:	cmake(Qt5ScriptTools)
-
-BuildRequires:	quazip-devel
+BuildRequires:	qt5-qtimageformats
+BuildRequires:	qt5-qttools
+BuildRequires:	pkgconfig(appstream-glib)
+BuildRequires:	pkgconfig(dbus-1)
+BuildRequires:	pkgconfig(freetype2)
+BuildRequires:	pkgconfig(fontconfig)
 BuildRequires:	pkgconfig(glu)
 BuildRequires:	pkgconfig(gl)
+BuildRequires:	pkgconfig(libtsm)
+BuildRequires:	pkgconfig(openssl)
+BuildRequires:	pkgconfig(Qt5Concurrent)
+BuildRequires:	pkgconfig(Qt5Core)
+BuildRequires:	pkgconfig(Qt5Designer)
+BuildRequires:	pkgconfig(Qt5Gui)
+BuildRequires:	pkgconfig(Qt5Help)
+BuildRequires:	pkgconfig(Qt5Network)
+BuildRequires:	pkgconfig(Qt5OpenGL)
+BuildRequires:	pkgconfig(Qt5PrintSupport)
+BuildRequires:	pkgconfig(Qt5Qml)
+BuildRequires:	pkgconfig(Qt5Quick)
+BuildRequires:	pkgconfig(Qt5Script)
+BuildRequires:	pkgconfig(Qt5ScriptTools)
+BuildRequires:	pkgconfig(Qt5Sql)
+BuildRequires:	pkgconfig(Qt5Svg)
+BuildRequires:	pkgconfig(Qt5UiTools)
+BuildRequires:	pkgconfig(Qt5WebChannel)
+BuildRequires:	pkgconfig(Qt5WebEngine)
+BuildRequires:	pkgconfig(Qt5WebEngineWidgets)
+BuildRequires:	pkgconfig(Qt5WebKitWidgets)
+BuildRequires:	pkgconfig(Qt5Xml)
+BuildRequires:	pkgconfig(Qt5XmlPatterns)
+BuildRequires:	pkgconfig(Qt5ScriptTools)
+BuildRequires:	pkgconfig(Qt5Help)
+BuildRequires:	pkgconfig(x11)
+BuildRequires:	pkgconfig(xext)
+BuildRequires:	pkgconfig(xrender)
 BuildRequires:	pkgconfig(zlib)
+# (unpackaged)
+#BuildRequires: spatialindex-devel
 
-BuildRequires:  pkgconfig(Qt5Concurrent)
-BuildRequires:  pkgconfig(Qt5Core)
-BuildRequires:  pkgconfig(Qt5Gui)
-BuildRequires:  pkgconfig(Qt5Designer)
-BuildRequires:  pkgconfig(Qt5Network)
-BuildRequires:  pkgconfig(Qt5OpenGL)
-BuildRequires:  pkgconfig(Qt5PrintSupport)
-BuildRequires:  pkgconfig(Qt5Qml)
-BuildRequires:  pkgconfig(Qt5Quick)
-BuildRequires:  pkgconfig(Qt5Script)
-BuildRequires:  pkgconfig(Qt5Sql)
-BuildRequires:  pkgconfig(Qt5Svg)
-BuildRequires:  pkgconfig(Qt5WebChannel)
-BuildRequires:  pkgconfig(Qt5WebEngine)
-BuildRequires:  pkgconfig(Qt5Xml)
-BuildRequires:  pkgconfig(Qt5XmlPatterns)
-BuildRequires:  pkgconfig(Qt5ScriptTools)
-BuildRequires:  pkgconfig(Qt5Help)
-BuildRequires:  pkgconfig(glu)
-
+Requires:	fonts-ttf-dejavu
+Requires:	qt5-qtimageformats
+Requires:	qt5-qttranslations
+#Requires:	vlgothic-fonts
+Requires:	wise
+ 
 %description
 QCad is a professional CAD System. With QCad you can easily construct
 and change drawings with ISO-text and many other features and save
 them as DXF-files. These DXF-files are the interface to many
 CAD-systems such as AutoCAD(TM) and many others.
 
+%files
+%doc readme.txt LICENSE.txt README.md gpl-3.0.txt cc-by-3.0.txt gpl-3.0-exceptions.txt
+%{_bindir}/%{name}
+%{_libdir}/%{name}
+%{_datadir}/%{name}
+%{_datadir}/applications/*.desktop
+%{_datadir}/icons/hicolor/scalable/apps/qcad.svg
+%{_datadir}/icons/qcad.png
+#%{_datadir}/pixmaps/qcad.png
+%{_mandir}/man1/qcad.1*
+
+#---------------------------------------------------------------------------
+
 %prep
 %autosetup -p1
 find . -name ".gitignore" -delete
-# Use system quazip
-rm -rf src/3rdparty/quazip/src
-# Adapt qtscriptgenerator to current Qt
-mkdir src/3rdparty/qt-labs-qtscriptgenerator-5.15.3
-sed -e 's,5.15.2,5.15.3,g' src/3rdparty/qt-labs-qtscriptgenerator-5.15.2/qt-labs-qtscriptgenerator-5.15.2.pro >src/3rdparty/qt-labs-qtscriptgenerator-5.15.3/qt-labs-qtscriptgenerator-5.15.3.pro
 
-qmake-qt5 -makefile CONFIG+=release %{name}.pro \
- QMAKE_CFLAGS_RELEASE="%{optflags} %(pkg-config --cflags Qt5UiTools) -I$PWD/src/3rdparty/spatialindexnavel/include" \
- QMAKE_CXXFLAGS_RELEASE="%{optflags} %(pkg-config --cflags Qt5UiTools) -I$PWD/src/3rdparty/spatialindexnavel/include" \
- QMAKE_LFLAGS="%{optflags} -Wl,-rpath -Wl,%{_libdir}/%{name}" \
- LFLAGS="%{optflags} -Wl,-rpath -Wl,%{_libdir}/%{name}"
+# use system libs
+#  quazip (unused)
+#rm -rf src/3rdparty/quazip/src
+#  spatialindex (unpackaged)
+#rm -rf src/3rdparty/spatialindexnavel/include/spatialindex
+
+# adapt qtscriptgenerator to current Qt
+mkdir -p src/3rdparty/qt-labs-qtscriptgenerator-%{qt_version}
+#sed -e "s|5.5.0|%{qt_version}|g" src/3rdparty/qt-labs-qtscriptgenerator-5.15.2/qt-labs-qtscriptgenerator-5.15.2.pro > src/3rdparty/qt-labs-qtscriptgenerator-%{qt_version}/qt-labs-qtscriptgenerator-%{qt_version}.pro
+cp -fa src/3rdparty/qt-labs-qtscriptgenerator-5.15.2/qt-labs-qtscriptgenerator-5.15.2.pro \
+	src/3rdparty/qt-labs-qtscriptgenerator-%{qt_version}/qt-labs-qtscriptgenerator-%{qt_version}.pro
 
 %build
+export CC=gcc
+export CXX=g++
+
+%qmake_qt5
+#-makefile CONFIG+=release %{name}.pro \
+# QMAKE_CFLAGS_RELEASE="%{optflags} %(pkg-config --cflags Qt5UiTools) -I$PWD/src/3rdparty/spatialindexnavel/include" \
+# QMAKE_CXXFLAGS_RELEASE="%{optflags} %(pkg-config --cflags Qt5UiTools) -I$PWD/src/3rdparty/spatialindexnavel/include" \
+# QMAKE_LFLAGS="%{optflags} -Wl,-rpath -Wl,%{_libdir}/%{name}" \
+# LFLAGS="%{optflags} -Wl,-rpath -Wl,%{_libdir}/%{name}"
+
 %make_build
 
 %install
-mkdir -p %{buildroot}%{_libdir}/%{name}/ts
-mkdir -p %{buildroot}%{_datadir}/pixmaps
-mkdir -p %{buildroot}%{_bindir}
-mkdir -p %{buildroot}%{_mandir}/man1
-mkdir -p %{buildroot}%{_datadir}/icons/hicolor/scalable/apps
-mkdir -p %{buildroot}%{_libdir}/qt5/plugins/codecs
-mkdir -p %{buildroot}%{_libdir}/qt5/plugins/script
-mkdir -p %{buildroot}%{_libdir}/qt5/plugins/designer
-mkdir -p %{buildroot}%{_libdir}/qt5/plugins/imageformats
-mkdir -p %{buildroot}%{_libdir}/qt5/plugins/sqldrivers
-mkdir -p %{buildroot}%{_libdir}/%{name}/plugins/codecs
-mkdir -p %{buildroot}%{_libdir}/%{name}/plugins/designer
-mkdir -p %{buildroot}%{_libdir}/%{name}/plugins/imageformats
-mkdir -p %{buildroot}%{_libdir}/%{name}/plugins/sqldrivers
-mkdir -p %{buildroot}%{_libdir}/%{name}/plugins/script
-mkdir -p %{buildroot}%{_libdir}/%{name}/plugins/printsupport
- 
-## Install fonts
-cp -a fonts %{buildroot}%{_libdir}/%{name}
- 
-# Unbundle vlgothic-fonts
-ln -sf %{_fontbasedir}/vlgothic/VL-Gothic-Regular.ttf %{buildroot}%{_libdir}/%{name}/fonts/VL-Gothic-Regular.ttf
- 
-# Unbundle dejavu-sans-fonts
-for i in `ls %{buildroot}%{_libdir}/%{name}/fonts/qt | grep DejaVuSans`; do
- ln -sf %{_fontbasedir}/dejavu/$i %{buildroot}%{_libdir}/%{name}/fonts/qt/$i
+# libs
+install -dm 0755 %{buildroot}%{_libdir}/%{name}
+install -pm 0755 release/%{name}-bin %{buildroot}%{_libdir}/%{name}
+install -pm 0755 release/*.so %{buildroot}%{_libdir}/%{name}
+
+# link plugins from system qt
+install -dm 0755 %{buildroot}%{_libdir}/%{name}/
+cp -r plugins %{buildroot}%{_libdir}/%{name}/
+for qtplugin in imageformats sqldrivers printsupport
+do
+	for sofiles in %{_qt5_plugindir}/${qtplugin}/*.so
+	do
+		ln -sf ${sofiles} %{buildroot}%{_libdir}/%{name}/plugins/${qtplugin}/${sofiles##/*/}
+	done
 done
-##
- 
-cp -a patterns %{buildroot}%{_libdir}/%{name}
-cp -a themes %{buildroot}%{_libdir}/%{name}
-cp -a libraries %{buildroot}%{_libdir}/%{name}
-cp -a scripts %{buildroot}%{_libdir}/%{name}
-cp -a plugins %{buildroot}%{_libdir}/%{name}
-cp -a linetypes %{buildroot}%{_libdir}/%{name}
- 
-# This file is required for Help's "Show Readme" menu choice
-cp -p readme.txt %{buildroot}%{_libdir}/%{name}
- 
-install -pm 644 ts/qcad*.qm %{buildroot}%{_libdir}/%{name}/ts
-ln -sf %{_libdir}/qt5/plugins/codecs/libqcncodecs.so %{buildroot}%{_libdir}/%{name}/plugins/codecs/libqcncodecs.so
-ln -sf %{_libdir}/qt5/plugins/codecs/libqjpcodecs.so %{buildroot}%{_libdir}/%{name}/plugins/codecs/libqjpcodecs.so
-ln -sf %{_libdir}/qt5/plugins/codecs/libqkrcodecs.so %{buildroot}%{_libdir}/%{name}/plugins/codecs/libqkrcodecs.so
-ln -sf %{_libdir}/qt5/plugins/codecs/libqtwcodecs.so %{buildroot}%{_libdir}/%{name}/plugins/codecs/libqtwcodecs.so
- 
-ln -sf %{_libdir}/qt5/plugins/designer/libqwebview.so %{buildroot}%{_libdir}/%{name}/plugins/designer/libqwebview.so
- 
-ln -sf %{_libdir}/qt5/plugins/imageformats/libqgif.so %{buildroot}%{_libdir}/%{name}/plugins/imageformats/libqgif.so
-ln -sf %{_libdir}/qt5/plugins/imageformats/libqico.so %{buildroot}%{_libdir}/%{name}/plugins/imageformats/libqico.so
-ln -sf %{_libdir}/qt5/plugins/imageformats/libqjpeg.so %{buildroot}%{_libdir}/%{name}/plugins/imageformats/libqjpeg.so
-ln -sf %{_libdir}/qt5/plugins/imageformats/libqsvg.so %{buildroot}%{_libdir}/%{name}/plugins/imageformats/libqsvg.so
-ln -sf %{_libdir}/qt5/plugins/imageformats/libqtga.so %{buildroot}%{_libdir}/%{name}/plugins/imageformats/libqtga.so
-ln -sf %{_libdir}/qt5/plugins/imageformats/libqtiff.so %{buildroot}%{_libdir}/%{name}/plugins/imageformats/libqtiff.so
- 
-ln -sf %{_libdir}/qt5/plugins/sqldrivers/libqsqlite.so %{buildroot}%{_libdir}/%{name}/plugins/sqldrivers/libqsqlite.so
-ln -sf %{_libdir}/qt5/plugins/printsupport/libcupsprintersupport.so %{buildroot}%{_libdir}/%{name}/plugins/printsupport/libcupsprintersupport.so
- 
-install -pm 644 scripts/qcad_icon.png %{buildroot}%{_datadir}/pixmaps/%{name}.png
-install -pm 755 release/*.so %{buildroot}%{_libdir}/%{name}
-install -pm 755 release/%{name}-bin %{buildroot}%{_libdir}/%{name}
-install -pm 644 readme.txt %{buildroot}%{_libdir}/%{name}
- 
-install -pm 644 qcad.1 %{buildroot}%{_mandir}/man1
-install -pm 644 scripts/%{name}_icon.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/%{name}.svg
- 
-find %{buildroot}%{_libdir}/%{name} -name ".gitignore" -delete
-find %{buildroot}%{_libdir}/%{name} -name "readme.txt" -delete
-find %{buildroot}%{_libdir}/%{name} -name "Makefile" -delete
- 
+
+# fix perms
 pushd %{buildroot}%{_libdir}/%{name}
-for i in `find . -type f \( -name "*.so*" -o -name "qcad-bin" \)`; do
-  chmod -c 755 $i
-  chrpath -r %{_libdir}/%{name} $i
+for i in `find . -type f \( -name "*.so*" -o -name "%{name}-bin" \)`; do
+	chmod -c 0755 $i
+	#chrpath -r %{_libdir}/%{name} $i
 done
 popd
- 
+
+# data
+install -dm 0755 %{buildroot}%{_datadir}/%{name}
+for d in examples fonts libraries linetypes patterns scripts themes ts
+do
+	cp -r $d %{buildroot}%{_datadir}/%{name}/
+done
+
+# unbundle fonts
+#   vlgothic-fonts (unpackagd)
+#ln -sf %{_fontbasedir}/vlgothic/VL-Gothic-Regular.ttf %{buildroot}%{_libdir}/%{name}/fonts/VL-Gothic-Regular.ttf
+#   dejavu-sans-fonts
+for f in `ls %{buildroot}%{_datadir}/%{name}/fonts/qt | grep DejaVuSans`
+do
+	ln -sf %{_fontbasedir}/dejavu/$f %{buildroot}%{_datadir}/%{name}/fonts/qt/$f
+done
+
+# launcher
+install -dm 0755 %{buildroot}%{_bindir}
 cat > %{buildroot}%{_bindir}/%{name} <<EOF
 #!/bin/sh
-export \
-LD_LIBRARY_PATH=%{_libdir}/%{name}:%{_libdir}/%{name}/plugins/script \
-QTLIB=%{_libdir} \
-QTDIR=%{_libdir}/qt5 \
-QTINC=%{_includedir}/qt5 \
-WISECONFIGDIR=%{_datadir}/wise2 \
-QT_QPA_PLATFORM=xcb \
-PATH=%{_libdir}:%{_libdir}/%{name}
+export LD_LIBRARY_PATH=%{_libdir}/%{name}:%{_libdir}/%{name}/plugins/script:\$LD_LIBRARY_PATH
+export QTLIB=%{_libdir}
+export QTDIR=%{_libdir}/qt5
+export QTINC=%{_includedir}/qt5
+export WISECONFIGDIR=%{_datadir}/wise
+export QT_QPA_PLATFORM=xcb
+export PATH=%{_libdir}:%{_libdir}/%{name}:%{_datadir}/%{name}:\$PATH
 %{_libdir}/%{name}/%{name}-bin "\$@"
 EOF
-chmod a+x %{buildroot}%{_bindir}/%{name}
+chmod 0755 %{buildroot}%{_bindir}/%{name}
+
+# icon
+install -Dm 0644 scripts/%{name}_icon.png %{buildroot}%{_iconsdir}/%{name}.png
+install -Dm 0644 scripts/%{name}_icon.svg %{buildroot}%{_iconsdir}/hicolor/scalable/apps/%{name}.svg
  
 # desktop
 install -m 755 -d %{buildroot}%{_datadir}/applications
@@ -173,18 +179,20 @@ Name[ru]=Qcad
 Comment=A professional CAD system
 Comment[ru]=Профессиональная CAD система
 Exec=%{name}
-Icon=qcad_icon
+Icon=qcad
 Terminal=false
 Type=Application
 Categories=Office;Chart;Qt;
 StartupNotify=true
 EOF
 
-%files
-%doc readme.txt LICENSE.txt README.md gpl-3.0.txt cc-by-3.0.txt gpl-3.0-exceptions.txt
-%{_bindir}/%{name}
-%{_libdir}/%{name}
-%{_datadir}/applications/*.desktop
-%{_datadir}/icons/hicolor/scalable/apps/qcad.svg
-%{_mandir}/man1/qcad.1*
-%{_datadir}/pixmaps/qcad.png
+# man page
+install -Dm644 %{name}.1 %{buildroot}%{_mandir}/man1/%{name}.1
+
+# documentation for help system
+install -Dm 0644 readme.txt %{buildroot}%{_datadir}/%{name}/readme.txt
+
+# clean
+find %{buildroot}%{_datadir}/%{name} \( -name '*.pri' -or -name '*.pro' -or -name '*.ts' \) -delete
+find %{buildroot}%{_datadir}/%{name} \( -name 'Makefile*' -or -name '.gitignore' \) -delete
+
