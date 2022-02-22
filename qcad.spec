@@ -97,8 +97,8 @@ cp -fa src/3rdparty/qt-labs-qtscriptgenerator-5.15.2/qt-labs-qtscriptgenerator-5
 	src/3rdparty/qt-labs-qtscriptgenerator-%{qt_version}/qt-labs-qtscriptgenerator-%{qt_version}.pro
 
 %build
-export CC=gcc
-export CXX=g++
+#export CC=gcc
+#export CXX=g++
 
 %qmake_qt5
 #-makefile CONFIG+=release %{name}.pro \
