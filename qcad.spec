@@ -1,5 +1,3 @@
-# cb - 20181202 - lto causes rcc error 'no data signature found'
-%define _disable_lto 1
 #define _empty_manifest_terminate_build 0
 
 %global qt_version %(qtpaths --qt-version)
@@ -7,12 +5,13 @@
 Summary:	A professional CAD system
 Name:		qcad
 Version:	3.27.6.7
-Release:	2
+Release:	3
 Group:		Graphics
 License:	GPLv3 with exceptions, CC-BY, GPLv2+, LGPLv2.1, BSD
 URL:		http://www.qcad.org
 Source0:	https://github.com/qcad/qcad/archive/refs/tags/v%{version}.tar.gz
-
+# (tpg) https://bugreports.qt.io/browse/QTBUG-73834
+Patch0:		qcad-fix-lto.patch
 BuildRequires:	fontpackages-devel
 BuildRequires:	qt5-devel
 BuildRequires:	qt5-qtimageformats
@@ -48,6 +47,7 @@ BuildRequires:	pkgconfig(Qt5Xml)
 BuildRequires:	pkgconfig(Qt5XmlPatterns)
 BuildRequires:	pkgconfig(Qt5ScriptTools)
 BuildRequires:	pkgconfig(Qt5Help)
+BuildRequires:	pkgconfig(Qt5UiTools)
 BuildRequires:	pkgconfig(x11)
 BuildRequires:	pkgconfig(xext)
 BuildRequires:	pkgconfig(xrender)
@@ -76,7 +76,7 @@ CAD-systems such as AutoCAD(TM) and many others.
 %{_datadir}/icons/hicolor/scalable/apps/qcad.svg
 %{_datadir}/icons/qcad.png
 #%{_datadir}/pixmaps/qcad.png
-%{_mandir}/man1/qcad.1*
+%doc %{_mandir}/man1/qcad.1*
 
 #---------------------------------------------------------------------------
 
@@ -97,15 +97,7 @@ cp -fa src/3rdparty/qt-labs-qtscriptgenerator-5.15.2/qt-labs-qtscriptgenerator-5
 	src/3rdparty/qt-labs-qtscriptgenerator-%{qt_version}/qt-labs-qtscriptgenerator-%{qt_version}.pro
 
 %build
-#export CC=gcc
-#export CXX=g++
-
 %qmake_qt5
-#-makefile CONFIG+=release %{name}.pro \
-# QMAKE_CFLAGS_RELEASE="%{optflags} %(pkg-config --cflags Qt5UiTools) -I$PWD/src/3rdparty/spatialindexnavel/include" \
-# QMAKE_CXXFLAGS_RELEASE="%{optflags} %(pkg-config --cflags Qt5UiTools) -I$PWD/src/3rdparty/spatialindexnavel/include" \
-# QMAKE_LFLAGS="%{optflags} -Wl,-rpath -Wl,%{_libdir}/%{name}" \
-# LFLAGS="%{optflags} -Wl,-rpath -Wl,%{_libdir}/%{name}"
 
 %make_build
 
@@ -118,36 +110,32 @@ install -pm 0755 release/*.so %{buildroot}%{_libdir}/%{name}
 # link plugins from system qt
 install -dm 0755 %{buildroot}%{_libdir}/%{name}/
 cp -r plugins %{buildroot}%{_libdir}/%{name}/
-for qtplugin in imageformats sqldrivers printsupport
-do
-	for sofiles in %{_qt5_plugindir}/${qtplugin}/*.so
-	do
-		ln -sf ${sofiles} %{buildroot}%{_libdir}/%{name}/plugins/${qtplugin}/${sofiles##/*/}
-	done
+for qtplugin in imageformats sqldrivers printsupport; do
+    for sofiles in %{_qt5_plugindir}/${qtplugin}/*.so; do
+	ln -sf ${sofiles} %{buildroot}%{_libdir}/%{name}/plugins/${qtplugin}/${sofiles##/*/}
+    done
 done
 
 # fix perms
 pushd %{buildroot}%{_libdir}/%{name}
-for i in `find . -type f \( -name "*.so*" -o -name "%{name}-bin" \)`; do
-	chmod -c 0755 $i
-	#chrpath -r %{_libdir}/%{name} $i
+for i in $(find . -type f \( -name "*.so*" -o -name "%{name}-bin" \)); do
+    chmod -c 0755 $i
+#	chrpath -r %{_libdir}/%{name} $i
 done
 popd
 
 # data
 install -dm 0755 %{buildroot}%{_datadir}/%{name}
-for d in examples fonts libraries linetypes patterns scripts themes ts
-do
-	cp -r $d %{buildroot}%{_datadir}/%{name}/
+for d in examples fonts libraries linetypes patterns scripts themes ts; do
+    cp -r $d %{buildroot}%{_datadir}/%{name}/
 done
 
 # unbundle fonts
 #   vlgothic-fonts (unpackagd)
 #ln -sf %{_fontbasedir}/vlgothic/VL-Gothic-Regular.ttf %{buildroot}%{_libdir}/%{name}/fonts/VL-Gothic-Regular.ttf
 #   dejavu-sans-fonts
-for f in `ls %{buildroot}%{_datadir}/%{name}/fonts/qt | grep DejaVuSans`
-do
-	ln -sf %{_fontbasedir}/dejavu/$f %{buildroot}%{_datadir}/%{name}/fonts/qt/$f
+for f in $(ls %{buildroot}%{_datadir}/%{name}/fonts/qt | grep DejaVuSans); do
+    ln -sf %{_fontbasedir}/dejavu/$f %{buildroot}%{_datadir}/%{name}/fonts/qt/$f
 done
 
 # launcher
@@ -168,7 +156,7 @@ chmod 0755 %{buildroot}%{_bindir}/%{name}
 # icon
 install -Dm 0644 scripts/%{name}_icon.png %{buildroot}%{_iconsdir}/%{name}.png
 install -Dm 0644 scripts/%{name}_icon.svg %{buildroot}%{_iconsdir}/hicolor/scalable/apps/%{name}.svg
- 
+
 # desktop
 install -m 755 -d %{buildroot}%{_datadir}/applications
 cat > %{buildroot}%{_datadir}/applications/%{name}.desktop <<EOF
@@ -195,4 +183,3 @@ install -Dm 0644 readme.txt %{buildroot}%{_datadir}/%{name}/readme.txt
 # clean
 find %{buildroot}%{_datadir}/%{name} \( -name '*.pri' -or -name '*.pro' -or -name '*.ts' \) -delete
 find %{buildroot}%{_datadir}/%{name} \( -name 'Makefile*' -or -name '.gitignore' \) -delete
-

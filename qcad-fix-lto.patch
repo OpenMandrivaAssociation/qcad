@@ -1,0 +1,12 @@
+diff -Naur a/src/scripts/scripts.pro b/src/scripts/scripts.pro
+--- a/src/scripts/scripts.pro	2022-07-08 12:44:09.000000000 +0000
++++ b/src/scripts/scripts.pro	2022-08-29 18:28:32.384450026 +0000
+@@ -9,7 +9,7 @@
+ RC_FILE     = scripts.rc
+ LIBS        += -l$${RLIBNAME}core
+ 
+-CONFIG      += resources_big
++CONFIG      -= resources_big
+ 
+ CONFIG(debug, debug|release) {
+     # include development scripts, tests:
