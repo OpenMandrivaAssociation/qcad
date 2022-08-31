@@ -92,7 +92,7 @@ find . -name ".gitignore" -delete
 
 # adapt qtscriptgenerator to current Qt
 mkdir -p src/3rdparty/qt-labs-qtscriptgenerator-%{qt_version}
-#sed -e "s|5.5.0|%{qt_version}|g" src/3rdparty/qt-labs-qtscriptgenerator-5.15.2/qt-labs-qtscriptgenerator-5.15.2.pro > src/3rdparty/qt-labs-qtscriptgenerator-%{qt_version}/qt-labs-qtscriptgenerator-%{qt_version}.pro
+cp -a src/3rdparty/qt-labs-qtscriptgenerator-5.15.2 src/3rdparty/qt-labs-qtscriptgenerator-%{qt_version}
 cp -fa src/3rdparty/qt-labs-qtscriptgenerator-5.15.2/qt-labs-qtscriptgenerator-5.15.2.pro \
 	src/3rdparty/qt-labs-qtscriptgenerator-%{qt_version}/qt-labs-qtscriptgenerator-%{qt_version}.pro
 
@@ -116,6 +116,15 @@ for qtplugin in imageformats sqldrivers printsupport; do
     done
 done
 
+# link qt modules
+for qtmodules in platforminputcontexts platforms xcbglintegrations; do
+    ln -sf %{_qt5_plugindir}/${qtmodules} %{buildroot}%{_libdir}/%{name}/plugins/${qtmodules}
+done
+
+# link qt wayland modules
+for qtwayland in wayland-decoration-client wayland-graphics-integration-client wayland-graphics-integration-server wayland-shell-integration; do
+    ln -sf %{_qt5_plugindir}/${qtwayland} %{buildroot}%{_libdir}/%{name}/${qtwayland}
+do
 # fix perms
 pushd %{buildroot}%{_libdir}/%{name}
 for i in $(find . -type f \( -name "*.so*" -o -name "%{name}-bin" \)); do
