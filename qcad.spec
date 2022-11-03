@@ -4,12 +4,12 @@
 
 Summary:	A professional CAD system
 Name:		qcad
-Version:	3.27.6.7
-Release:	3
+Version:	3.27.8.0
+Release:	1
 Group:		Graphics
 License:	GPLv3 with exceptions, CC-BY, GPLv2+, LGPLv2.1, BSD
 URL:		http://www.qcad.org
-Source0:	https://github.com/qcad/qcad/archive/refs/tags/v%{version}.tar.gz
+Source0:	https://github.com/qcad/qcad/archive/v%{version}/%{name}-%{version}.tar.gz
 # (tpg) https://bugreports.qt.io/browse/QTBUG-73834
 Patch0:		qcad-fix-lto.patch
 BuildRequires:	fontpackages-devel
@@ -92,13 +92,12 @@ find . -name ".gitignore" -delete
 
 # adapt qtscriptgenerator to current Qt
 mkdir -p src/3rdparty/qt-labs-qtscriptgenerator-%{qt_version}
-cp -a src/3rdparty/qt-labs-qtscriptgenerator-5.15.2 src/3rdparty/qt-labs-qtscriptgenerator-%{qt_version}
-cp -fa src/3rdparty/qt-labs-qtscriptgenerator-5.15.2/qt-labs-qtscriptgenerator-5.15.2.pro \
+cp -a src/3rdparty/qt-labs-qtscriptgenerator-5.15.3 src/3rdparty/qt-labs-qtscriptgenerator-%{qt_version}
+cp -fa src/3rdparty/qt-labs-qtscriptgenerator-5.15.3/qt-labs-qtscriptgenerator-5.15.3.pro \
 	src/3rdparty/qt-labs-qtscriptgenerator-%{qt_version}/qt-labs-qtscriptgenerator-%{qt_version}.pro
 
 %build
 %qmake_qt5
-
 %make_build
 
 %install
