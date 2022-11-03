@@ -123,7 +123,8 @@ done
 # link qt wayland modules
 for qtwayland in wayland-decoration-client wayland-graphics-integration-client wayland-graphics-integration-server wayland-shell-integration; do
     ln -sf %{_qt5_plugindir}/${qtwayland} %{buildroot}%{_libdir}/%{name}/${qtwayland}
-do
+done
+
 # fix perms
 pushd %{buildroot}%{_libdir}/%{name}
 for i in $(find . -type f \( -name "*.so*" -o -name "%{name}-bin" \)); do
