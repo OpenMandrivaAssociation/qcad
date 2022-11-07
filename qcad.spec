@@ -1,6 +1,6 @@
 #define _empty_manifest_terminate_build 0
 
-%global qt_version %(qtpaths --qt-version)
+%global qt_current_version %(qtpaths --qt-version)
 
 Summary:	A professional CAD system
 Name:		qcad
@@ -91,10 +91,13 @@ find . -name ".gitignore" -delete
 #rm -rf src/3rdparty/spatialindexnavel/include/spatialindex
 
 # adapt qtscriptgenerator to current Qt
-mkdir -p src/3rdparty/qt-labs-qtscriptgenerator-%{qt_version}
-cp -a src/3rdparty/qt-labs-qtscriptgenerator-5.15.3 src/3rdparty/qt-labs-qtscriptgenerator-%{qt_version}
-cp -fa src/3rdparty/qt-labs-qtscriptgenerator-5.15.3/qt-labs-qtscriptgenerator-5.15.3.pro \
-	src/3rdparty/qt-labs-qtscriptgenerator-%{qt_version}/qt-labs-qtscriptgenerator-%{qt_version}.pro
+%define qt_version 5.15.3
+if [ %{qt_current_version} -ne %{qt_version} ]; then
+	mkdir -p src/3rdparty/qt-labs-qtscriptgenerator-%{qt_current_version}
+	cp -a src/3rdparty/qt-labs-qtscriptgenerator-%{qt_version} src/3rdparty/qt-labs-qtscriptgenerator-%{qt_current_version}
+	cp -fa src/3rdparty/qt-labs-qtscriptgenerator-%{qt_version}/qt-labs-qtscriptgenerator-%{qt_version}.pro \
+		src/3rdparty/qt-labs-qtscriptgenerator-%{qt_current_version}/qt-labs-qtscriptgenerator-%{qt_current_version}.pro
+fi
 
 %build
 %qmake_qt5
