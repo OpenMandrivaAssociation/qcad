@@ -1,0 +1,11 @@
+--- a/src/core/core.pro
++++ b/src/core/core.pro
+@@ -320,7 +320,7 @@
+     QMAKE_LFLAGS += -framework ApplicationServices -framework Foundation
+ }
+ 
+-linux-g++* {
++linux {
+     # this might or might not be needed under Linux:
+     LIBS += -lX11
+ }
