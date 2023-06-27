@@ -101,6 +101,8 @@ if [ "%{qt_current_version}" != "%{qt_version}" ]; then
 fi
 
 %build
+export CC=gcc
+export CXX=g++
 %qmake_qt5
 %make_build
 
