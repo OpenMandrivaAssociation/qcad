@@ -8,7 +8,7 @@ Version:	3.29.6.5
 Release:	1
 Group:		Graphics
 License:	GPLv3 with exceptions, CC-BY, GPLv2+, LGPLv2.1, BSD
-URL:		http://www.qcad.org
+URL:		https://www.qcad.org
 Source0:	https://github.com/qcad/qcad/archive/v%{version}/%{name}-%{version}.tar.gz
 # (tpg) https://bugreports.qt.io/browse/QTBUG-73834
 Patch0:		qcad-fix-lto.patch
