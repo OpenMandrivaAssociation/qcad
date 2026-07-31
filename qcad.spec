@@ -4,14 +4,14 @@
 
 Summary:	A professional CAD system
 Name:		qcad
-Version:	3.29.6.5
+Version:	3.32.9.0
 Release:	1
 Group:		Graphics
 License:	GPLv3 with exceptions, CC-BY, GPLv2+, LGPLv2.1, BSD
 URL:		https://www.qcad.org
 Source0:	https://github.com/qcad/qcad/archive/v%{version}/%{name}-%{version}.tar.gz
 # (tpg) https://bugreports.qt.io/browse/QTBUG-73834
-Patch0:		qcad-fix-lto.patch
+# dropped (no longer applies): Patch0:		qcad-fix-lto.patch
 Patch1:		qcad-3.27.8.7-fix-link-stage.patch
 BuildRequires:	make
 BuildRequires:	fontpackages-devel
