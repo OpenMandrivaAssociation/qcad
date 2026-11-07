@@ -26,6 +26,7 @@ Patch2:		fix-X11-linking.patch
 Patch4:		fix-qcadjsapi-linking.patch
 Patch3:		fix-cmake-versions.patch
 BuildRequires:	gnutar
+BuildRequires:	ninja
 BuildRequires:	fontpackages-devel
 BuildRequires:	qt6-qtimageformats
 BuildRequires:	qt6-qttools
