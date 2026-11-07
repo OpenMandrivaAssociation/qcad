@@ -5,7 +5,7 @@
 
 #define _empty_manifest_terminate_build 0
 %define _build_id_links none
-%global _QCAD_DIR %{_libdir}/%{name}
+#%%global _QCAD_DIR %{_libdir}/%{name}
 
 #%%global qt_current_version %%(qtpaths --qt-version)
 
