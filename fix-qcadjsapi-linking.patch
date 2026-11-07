@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2c6e7f8..0b4f49f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -144,6 +144,7 @@ target_link_libraries(qcadjsapi PRIVATE
+     qcadgrid
+     qcadoperations
+     qcadspatialindex
++    spatialindex
+     qcadstemmer
+     qtjsapi
+     opennurbs

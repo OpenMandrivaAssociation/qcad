@@ -1,0 +1,17 @@
+diff --git a/src/core/CMakeLists.txt b/src/core/CMakeLists.txt
+index 70fbc5f..8c4da4f 100644
+--- a/src/core/CMakeLists.txt
++++ b/src/core/CMakeLists.txt
+@@ -319,9 +319,9 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+ endif()
+ 
+ #if(_x_ + linux-g)
+-#    target_link_libraries(qcadcore PUBLIC
+-#        X11
+-#    )
++    target_link_libraries(qcadcore PUBLIC
++        X11
++    )
+ #endif()
+ 
+ #if((QT_VERSION_MAJOR GREATER 4))

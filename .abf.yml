@@ -1,2 +1,4 @@
 sources:
-  qcad-3.32.9.0.tar.gz: 97de11247dcca5fa437b851dc9165aadd2b99267
+  qcad-3.33.1.0.tar.gz: c4e4c30c1ce105adda19a8021d5c5d264ade38f3
+  qcadjsapi-3.33.1.0.tar.gz: 2263801f74454d4f43d632d3adef4b55eeb74cab
+  qtjsapi-3.33.1.0.tar.gz: b39107fff392eef32503590c17a67162b6be99ad
