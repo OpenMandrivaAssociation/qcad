@@ -7,7 +7,7 @@
 %define _build_id_links none
 %global _QCAD_DIR %{_libdir}/%{name}
 
-#%%global qt_current_version %(qtpaths --qt-version)
+#%%global qt_current_version %%(qtpaths --qt-version)
 
 Summary:	A professional CAD system
 Name:		qcad
@@ -50,7 +50,7 @@ BuildRequires:	pkgconfig(Qt6Quick)
 #BuildRequires:	pkgconfig(Qt5ScriptTools)
 BuildRequires:	pkgconfig(Qt6Sql)
 BuildRequires:	pkgconfig(Qt6Svg)
-BuildRequires:	pkgconfig(Qt6UiTools)
+BuildRequires:	cmake(Qt6UiTools)
 BuildRequires:	pkgconfig(Qt6WebChannel)
 BuildRequires:	pkgconfig(Qt6WebEngineCore)
 BuildRequires:	pkgconfig(Qt6WebEngineWidgets)
