@@ -25,6 +25,7 @@ Patch1:		qcad-3.27.8.7-fix-link-stage.patch
 Patch2:		fix-X11-linking.patch
 Patch4:		fix-qcadjsapi-linking.patch
 Patch3:		fix-cmake-versions.patch
+BuildRequires:	gnutar
 BuildRequires:	fontpackages-devel
 BuildRequires:	qt6-qtimageformats
 BuildRequires:	qt6-qttools
@@ -48,7 +49,7 @@ BuildRequires:	pkgconfig(Qt6Qml)
 BuildRequires:	pkgconfig(Qt6Quick)
 BuildRequires:	pkgconfig(Qt6Sql)
 BuildRequires:	pkgconfig(Qt6Svg)
-BuildRequires:	pkgconfig(Qt6UiTools)
+BuildRequires:	cmake(Qt6UiTools)
 BuildRequires:	pkgconfig(Qt6WebChannel)
 BuildRequires:	pkgconfig(Qt6WebEngineCore)
 BuildRequires:	pkgconfig(Qt6WebEngineWidgets)
