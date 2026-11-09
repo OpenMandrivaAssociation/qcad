@@ -144,7 +144,8 @@ cd %{builddir}/qtjsapi
        -DVulkan_GLSLC_EXECUTABLE:FILEPATH=%{_bindir}/glslang -DVulkan_GLSLANG_VALIDATOR_EXECUTABLE:FILEPATH=%{_bindir}/glslangValidator \
        -DCMAKE_VERBOSE_MAKEFILE:BOOL=TRUE -DBUILD_SHARED_LIBS:BOOL=ON
 
-%ninja_build
+# Generated binding units OOM cc1plus at the default job count with -flto -g3.
+RPM_BUILD_NCPUS=2 %ninja_build
 
 cd %{builddir}/qcadjsapi
 
@@ -154,7 +155,6 @@ cd %{builddir}/qcadjsapi
        -DVulkan_GLSLC_EXECUTABLE:FILEPATH=%{_bindir}/glslang -DVulkan_GLSLANG_VALIDATOR_EXECUTABLE:FILEPATH=%{_bindir}/glslangValidator \
        -DCMAKE_VERBOSE_MAKEFILE:BOOL=TRUE -DBUILD_SHARED_LIBS:BOOL=ON
 
-# Generated RJSHelper units OOM cc1plus at the default job count with -flto -g3.
 RPM_BUILD_NCPUS=2 %ninja_build
 
 %install
