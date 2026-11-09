@@ -145,7 +145,8 @@ cd %{builddir}/qtjsapi
        -DCMAKE_VERBOSE_MAKEFILE:BOOL=TRUE -DBUILD_SHARED_LIBS:BOOL=ON
 
 # Generated binding units OOM cc1plus at the default job count with -flto -g3.
-RPM_BUILD_NCPUS=2 %ninja_build
+# %ninja_build expands to its own command, so a RPM_BUILD_NCPUS= prefix does not apply.
+/usr/bin/ninja -j2
 
 cd %{builddir}/qcadjsapi
 
@@ -155,7 +156,7 @@ cd %{builddir}/qcadjsapi
        -DVulkan_GLSLC_EXECUTABLE:FILEPATH=%{_bindir}/glslang -DVulkan_GLSLANG_VALIDATOR_EXECUTABLE:FILEPATH=%{_bindir}/glslangValidator \
        -DCMAKE_VERBOSE_MAKEFILE:BOOL=TRUE -DBUILD_SHARED_LIBS:BOOL=ON
 
-RPM_BUILD_NCPUS=2 %ninja_build
+/usr/bin/ninja -j2
 
 %install
 %ninja_install -C %{builddir}/qcad/build
