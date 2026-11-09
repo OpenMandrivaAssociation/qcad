@@ -5,7 +5,7 @@
 
 #define _empty_manifest_terminate_build 0
 %define _build_id_links none
-#%%global _QCAD_DIR %{_libdir}/%{name}
+%global _QCAD_DIR %{_libdir}/%{name}
 
 #%%global qt_current_version %%(qtpaths --qt-version)
 
@@ -178,12 +178,12 @@ done
 
 # link qt modules
 for qtmodules in platforminputcontexts platforms xcbglintegrations; do
-    ln -srf %{_qt6_plugindir}/${qtmodules} %{buildroot}%{_libdir}/%{name}/plugins/${qtmodules}
+    ln -srf %{_libdir}/qt6/plugins/${qtmodules} %{buildroot}%{_libdir}/%{name}/plugins/${qtmodules}
 done
 
 # link qt wayland modules
 for qtwayland in wayland-decoration-client wayland-graphics-integration-client wayland-graphics-integration-server wayland-shell-integration; do
-    ln -srf %{_qt6_plugindir}/${qtwayland} %{buildroot}%{_libdir}/%{name}/${qtwayland}
+    ln -srf %{_libdir}/qt6/plugins/${qtwayland} %{buildroot}%{_libdir}/%{name}/${qtwayland}
 done
 
 # fix perms
