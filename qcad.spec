@@ -63,7 +63,7 @@ BuildRequires:	pkgconfig(x11)
 BuildRequires:	pkgconfig(xext)
 BuildRequires:	pkgconfig(xrender)
 BuildRequires:	pkgconfig(zlib)
-BuildRequires:	vulcan-headers
+BuildRequires:	cmake(VulkanHeaders)
 # (unpackaged)
 BuildRequires:  spatialindex-devel
 
@@ -108,9 +108,9 @@ mkdir -p %{_builddir}/qcadjsapi
 %patch -p1  1 2 3
 
 cd %{_builddir}/qtjsapi
-gtar -xvf  ../../../qtjsapi-%{version}.tar.gz --strip=1
+gtar -xvf %{_sourcedir}/qtjsapi-%{version}.tar.gz --strip=1
 cd %{_builddir}/qcadjsapi
-gtar -xvf  ../../..//qcadjsapi-%{version}.tar.gz --strip=1
+gtar -xvf %{_sourcedir}/qcadjsapi-%{version}.tar.gz --strip=1
 %patch -p1 4
 
 find . -name ".gitignore" -delete
